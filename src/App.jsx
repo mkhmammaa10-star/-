@@ -221,45 +221,41 @@ export default function App() {
     setMessage("تم حفظ الشبكة في اللعبة");
   }
 
-  function suggestMove() {
+function suggestMove() {
 
-    const dirs = ["left","up","right","down"];
+  const dirs = ["left","up","right","down"];
 
-    let bestDir = null;
-    let bestScore = -Infinity;
+  let bestDir = null;
+  let bestScore = -Infinity;
 
-    for (const dir of dirs) {
+  for (const dir of dirs) {
 
-      const result = simulateMove(gameGrid, dir);
+    const result = simulateMove(gameGrid, dir);
 
-      if (!result.moved) continue;
+    if (!result.moved) continue;
 
-      const score = search(result.grid,3) + result.merges * 500;
+    const score = search(result.grid,3) + result.merges * 500;
 
-      if(score > bestScore){
-
-        bestScore = score;
-        bestDir = dir;
-      }
+    if(score > bestScore){
+      bestScore = score;
+      bestDir = dir;
     }
-
-    if(!bestDir){
-
-      setMessage("لا يوجد حركة ممكنة");
-      return;
-    }
-
-    setSuggestedDir(bestDir);
-setMessage("الاقتراح الذكي: " + dirToArabic(bestDir));
-
-const result = simulateMove(gameGrid, bestDir);
-
-if(result.moved){
-  setGameGrid(result.grid);
-  setInputGrid(cloneGrid(result.grid));
-}
   }
 
+  if(!bestDir){
+    setMessage("لا يوجد حركة ممكنة");
+    return;
+  }
+
+  const result = simulateMove(gameGrid, bestDir);
+
+  if(result.moved){
+    setGameGrid(result.grid);
+    setInputGrid(cloneGrid(result.grid));
+  }
+
+  setMessage("تم تنفيذ الحركة: " + dirToArabic(bestDir));
+}
   function applySuggested(){
 
     if(!suggestedDir) return;
