@@ -247,26 +247,55 @@ function suggestMove() {
     return;
   }
 
+  setSuggestedDir(bestDir);
+
+  setMessage("الاقتراح الذكي: " + dirToArabic(bestDir));
+
+  // تطبيق الحركة مباشرة
   const result = simulateMove(gameGrid, bestDir);
 
   if(result.moved){
     setGameGrid(result.grid);
     setInputGrid(cloneGrid(result.grid));
   }
+function suggestMove() {
 
-  setMessage("تم تنفيذ الحركة: " + dirToArabic(bestDir));
-}
-  function applySuggested(){
+  const dirs = ["left","up","right","down"];
 
-    if(!suggestedDir) return;
+  let bestDir = null;
+  let bestScore = -Infinity;
 
-    const result = simulateMove(gameGrid,suggestedDir);
+  for (const dir of dirs) {
 
-    if(!result.moved) return;
+    const result = simulateMove(gameGrid, dir);
 
+    if (!result.moved) continue;
+
+    const score = search(result.grid,3) + result.merges * 500;
+
+    if(score > bestScore){
+      bestScore = score;
+      bestDir = dir;
+    }
+  }
+
+  if(!bestDir){
+    setMessage("لا يوجد حركة ممكنة");
+    return;
+  }
+
+  setSuggestedDir(bestDir);
+
+  setMessage("الاقتراح الذكي: " + dirToArabic(bestDir));
+
+  // تطبيق الحركة مباشرة
+  const result = simulateMove(gameGrid, bestDir);
+
+  if(result.moved){
     setGameGrid(result.grid);
     setInputGrid(cloneGrid(result.grid));
   }
+}
 
   const gridStyle = {
 
