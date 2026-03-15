@@ -250,7 +250,14 @@ export default function App() {
     }
 
     setSuggestedDir(bestDir);
-    setMessage("الاقتراح الذكي: " + dirToArabic(bestDir));
+setMessage("الاقتراح الذكي: " + dirToArabic(bestDir));
+
+const result = simulateMove(gameGrid, bestDir);
+
+if(result.moved){
+  setGameGrid(result.grid);
+  setInputGrid(cloneGrid(result.grid));
+}
   }
 
   function applySuggested(){
